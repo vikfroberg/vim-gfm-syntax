@@ -30,7 +30,13 @@ syn region githubFlavoredMarkdownStrikethrough start="\~\~" end="\~\~"
 " Internal link
 "
 " [[This is a filename]]
-syn region githubFlavoredMarkdownInternalLink start="\[\[" end="\]\]"
+syn region githubFlavoredMarkdownInternalLink matchgroup=githubFlavoredMarkdownInternalLinkDelimiter start="\[\[" end="\]\]" contains=@markdownInline,markdownLineStart concealends
+
+" External link conceal
+"
+" []()
+syn region markdownLink matchgroup=markdownLinkDelimiter start="(" end=")" keepend contained conceal contains=markdownUrl
+syn region markdownLinkText matchgroup=markdownLinkTextDelimiter start="!\=\[\%(\%(\_[^][]\|\[\_[^][]*\]\)*]\%( \=[[(]\)\)\@=" end="\]\%( \=[[(]\)\@=" nextgroup=markdownLink,markdownId skipwhite contains=@markdownInline,markdownLineStart concealends
 
 " Check box
 "
@@ -40,10 +46,14 @@ syn match githubFlavoredMarkdownCheckBox "\%(\_^\s*\%(-\|\*\|+\|\d\+\.\)\s\+\)\@
 syn match githubFlavoredMarkdownCheckBoxBracket "\[\|]" contained containedin=githubFlavoredMarkdownCheckBox
 syn keyword githubFlavoredMarkdownCheckBoxX x contained containedin=githubFlavoredMarkdownCheckBox
 
+syntax match todoCheckbox "\[\ \]" conceal cchar=
+syntax match todoCheckbox "\[x\]" conceal cchar=
+hi def link todoCheckbox Todo
+
 hi def link githubFlavoredMarkdownCode            Constant
 hi def link githubFlavoredMarkdownMention         markdownLinkText
 hi def link githubFlavoredMarkdownTag             markdownLinkText
-hi def link githubFlavoredMarkdownInternalLink    markdownLinkText
+hi def link githubFlavoredMarkdownInternalLink    Type
 hi def link githubFlavoredMarkdownStrikethrough   Comment
 hi def link githubFlavoredMarkdownEmoji           PreProc
 hi def link githubFlavoredMarkdownTableDelimiter  Delimiter
